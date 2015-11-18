@@ -4,24 +4,29 @@ module.exports = function(karmaConfig) {
     frameworks: ['browserify', 'jasmine'],
     files: [
       'src/scripts/**',
-      'src/tests/units/**'
+      'tests/units/**'
     ],
     exclude: [
       '**/*.swp'
     ],
     preprocessors: {
       'src/scripts/**': ['browserify'],
-      'src/tests/units/**': ['browserify']
+      'tests/units/**': ['browserify']
     },
     port: 9876,
     colors: true,
     logLevel: karmaConfig.LOG_INFO,
     reporters: ['dots'],
     autoWatch: true,
-    browsers: ['firefox'],
+    browsers: ['Firefox'],
     singleRun: false,
     concurrency: Infinity,
-    browserify: pkg.config.browserify,
+    browserify: {
+      debug: true,
+      transform: [
+        ['babelify', { presets: 'es2015' }]
+      ]
+    },
     watchify: {
       poll: true
     }
