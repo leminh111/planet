@@ -1,0 +1,14 @@
+{
+  "name": "planet",
+  "version": "0.0.1",
+  "description": "..",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leminh111/planet.git"
+  },
+  "author": "leminh111 <leminh111@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
+}
