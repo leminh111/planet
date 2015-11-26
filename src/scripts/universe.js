@@ -1,3 +1,4 @@
+import Planet from './planet';
 export default class Universe {
   constructor () {
     this.planets = [];
@@ -12,6 +13,7 @@ export default class Universe {
    * @param {Node} canvas
    */
   setCanvas(canvas) {
+    this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     return this;
   }
@@ -42,6 +44,18 @@ export default class Universe {
     return this;
   }
 
+  createPlanet() {
+    var self = this;
+
+    this.canvas.addEventListener('click', function(e) {
+      self.addPlanet(new Planet());
+      self.planets[self.planets.length - 1].radius = 5;
+      self.planets[self.planets.length - 1].mass = 8;
+      self.planets[self.planets.length - 1].position = {x: e.clientX, y: e.clientY};
+    });
+    return this;
+  }
+
   bigbang() {
     var self = this;
 
@@ -56,7 +70,7 @@ export default class Universe {
       0, 0,
       this.ctx.canvas.width, this.ctx.canvas.height
     );
-
+    
     for (var i = 0; i < this.planets.length; i++) {
       this.ctx.beginPath();
       this.ctx.arc(this.planets[i].position.x,this.planets[i].position.y,this.planets[i].radius,0,Math.PI*2,true);

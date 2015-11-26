@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
   .addPlanet(planetB)
   .addPlanet(planetC)
   .setCanvas(document.getElementById('universe1'))
-  .setDeltaT(0.8)
+  .createPlanet()
+  .setDeltaT(0.08)
   .bigbang();
 }, false)
