@@ -21,11 +21,32 @@ export default class Universe {
     return this;
   }
 
+  collide() {
+    var dist;
+    for (var i = 0; i < this.planets.length; i++) {
+      for (var j = 0; j < this.planets.length; j++) {
+        if (i !== j) {
+          dist = Math.sqrt(Math.pow(this.planets[j].position.x - this.planets[i].position.x,2) + Math.pow(this.planets[j].position.y - this.planets[i].position.y,2));
+          if (dist < this.planets[j].radius + this.planets[i].radius) {
+            if (this.planets[i].mass <= this.planets[j].mass) {
+              this.planets[j].mass += this.planets[i].mass;
+              this.planets.splice(i, 1);
+            } else {
+              this.planets[i].mass += this.planets[j].mass;
+              this.planets.splice(j, 1);
+            }
+          }
+        }
+      }
+    }
+    return this;
+  }
+
   bigbang() {
     var self = this;
 
     setInterval(function() {
-      self.tick().render();
+      self.tick().collide().render();
     }, this.deltaT);
     return this;
   }
@@ -39,51 +60,38 @@ export default class Universe {
     for (var i = 0; i < this.planets.length; i++) {
       this.ctx.beginPath();
       this.ctx.arc(this.planets[i].position.x,this.planets[i].position.y,this.planets[i].radius,0,Math.PI*2,true);
-      this.ctx.fill();
+      this.ctx.stroke();
     }
   }
 
   tick() {
     var dt = this.deltaT;
 
-    var gConst = 1,
+    var gConst = 6.674,
         forceX = 0,
         deltaT = dt,
+        subtrX,
+        subtrY,
         forceY = 0;
 
     for (var i = 0; i < this.planets.length; i++) {
       
       for (var j = 0; j < this.planets.length; j++) {
         if (j == i) {
-          forceX = 0;
-          forceY = 0;
+          forceX += 0;
+          forceY += 0;
         }
         else {
-          if (this.planets[j].position.x > this.planets[i].position.x) {
-            forceX = gConst*this.planets[i].mass*this.planets[j].mass/Math.pow(this.planets[j].position.x - this.planets[i].position.x, 2);
-          }
-          else if (this.planets[j].position.x == this.planets[i].position.x) {
-            console.log('beep');
-            forceX = 0;
-          }
-          else {
-            forceX = -gConst*this.planets[i].mass*this.planets[j].mass/Math.pow(this.planets[j].position.x - this.planets[i].position.x, 2);
-          }
-          
-          if (this.planets[j].position.y > this.planets[i].position.y) {
-            forceY = gConst*this.planets[i].mass*this.planets[j].mass/Math.pow(this.planets[j].position.y - this.planets[i].position.y, 2);
-          }
-          else if (this.planets[j].position.y == this.planets[i].position.y) {
-            forceY = 0;
-          }
-          else {
-            forceY = -gConst*this.planets[i].mass*this.planets[j].mass/Math.pow(this.planets[j].position.y - this.planets[i].position.y, 2);
-          }
+          subtrX = this.planets[j].position.x - this.planets[i].position.x;
+          subtrY = this.planets[j].position.y - this.planets[i].position.y;
+          forceX += gConst*this.planets[i].mass*this.planets[j].mass*subtrX/Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
+          forceY += gConst*this.planets[i].mass*this.planets[j].mass*subtrY/Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
         }
-
-        this.planets[i].gForce.x += forceX;
-        this.planets[i].gForce.y += forceY;
       }
+      this.planets[i].gForce.x = forceX;
+      this.planets[i].gForce.y = forceY;
+      forceX = 0;
+      forceY = 0;
     }
     
     for (var k = 0; k < this.planets.length; k++) {

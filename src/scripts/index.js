@@ -7,25 +7,27 @@ document.addEventListener('DOMContentLoaded', function() {
   var planetA = new Planet();
 
   var planetB = new Planet();
-
+  var planetC = new Planet();
 
   planetA.radius = 10;
-  planetA.mass = 100;
-  planetA.position = {x:400, y:250};
-  planetA.velocity.x = 0;
+  planetA.mass = 9;
+  planetA.position = {x:400, y:200};
+  planetA.velocity.y = 20;
 
   planetB.radius = 15;
-  planetB.mass = 100;
-  planetB.position = {x:250, y:250};
+  planetB.mass = 8000;
+  planetB.position = {x:500, y:250};
 
-  /*planetC.radius = 15;
-  planetC.mass = 100;
-  planetC.position = {x:500, y:10};*/
+  planetC.radius = 10;
+  planetC.mass = 10;
+  planetC.position = {x:350, y:200};
+  planetC.velocity.y = 18;
 
   universe
   .addPlanet(planetA)
   .addPlanet(planetB)
+  .addPlanet(planetC)
   .setCanvas(document.getElementById('universe1'))
-  .setDeltaT(0.08)
+  .setDeltaT(0.8)
   .bigbang();
 }, false)
