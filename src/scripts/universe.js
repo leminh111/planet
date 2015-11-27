@@ -46,19 +46,25 @@ export default class Universe {
 
   createPlanet() {
     var self = this;
+    self.plR = 1;
 
     this.canvas.addEventListener('mousedown', function(e) {
       self.initX = e.clientX - this.getBoundingClientRect().left;
       self.initY = e.clientY - this.getBoundingClientRect().top;
+      self.stopInterval = setInterval(function() {
+        self.plR += 1;
+      }, 100);
     });
     this.canvas.addEventListener('mouseup', function(e) {
+      clearInterval(self.stopInterval);
       self.lastX =  e.clientX - this.getBoundingClientRect().left;
       self.lastY =  e.clientY - this.getBoundingClientRect().top;
       self.addPlanet(new Planet());
-      self.planets[self.planets.length - 1].radius = 5;
+      self.planets[self.planets.length - 1].radius = self.plR;
       self.planets[self.planets.length - 1].mass = 8;
       self.planets[self.planets.length - 1].position = {x: self.initX, y: self.initY};
       self.planets[self.planets.length - 1].velocity = {x: self.lastX - self.initX, y: self.lastY - self.initY};
+      self.plR = 1;
     });
     return this;
   }
