@@ -46,25 +46,48 @@ export default class Universe {
 
   createPlanet() {
     var self = this;
-    self.plR = 1;
 
+    // Mousedown, let's create a new planet at that position
+    //   BUT don't add it into the planet list (so it won't move ..)
+    //   Also, we need to enlarge the planet every 100ms,
+    //   and remember to draw it in `render()`
     this.canvas.addEventListener('mousedown', function(e) {
       self.initX = e.clientX - this.getBoundingClientRect().left;
       self.initY = e.clientY - this.getBoundingClientRect().top;
+
+      self.newPlanet = new Planet();
+      self.newPlanet.position.x = self.initX;
+      self.newPlanet.position.y = self.initY;
+      self.newPlanet.radius = 10;
+
       self.stopInterval = setInterval(function() {
-        self.plR += 1;
+        ++self.newPlanet.radius;
       }, 100);
     });
+
+    // When mouse move, if there's a newPlanet,
+    //   update its position to mouse pointer
+    this.canvas.addEventListener('mousemove', function(e) {
+      if(self.newPlanet) {
+        self.newPlanet.position.x = e.clientX;
+        self.newPlanet.position.y = e.clientY;
+      }
+    });
+
+    // When release mouse, calculate the velocity
+    //   and add it into the universe
     this.canvas.addEventListener('mouseup', function(e) {
       clearInterval(self.stopInterval);
-      self.lastX =  e.clientX - this.getBoundingClientRect().left;
-      self.lastY =  e.clientY - this.getBoundingClientRect().top;
-      self.addPlanet(new Planet());
-      self.planets[self.planets.length - 1].radius = self.plR;
-      self.planets[self.planets.length - 1].mass = 8;
-      self.planets[self.planets.length - 1].position = {x: self.initX, y: self.initY};
-      self.planets[self.planets.length - 1].velocity = {x: self.lastX - self.initX, y: self.lastY - self.initY};
-      self.plR = 1;
+
+      self.lastX = e.clientX - this.getBoundingClientRect().left;
+      self.lastY = e.clientY - this.getBoundingClientRect().top;
+
+      var velocity = { x: 0, y: 0 };
+
+      self.newPlanet.velocity = velocity;
+      self.addPlanet(self.newPlanet);
+
+      self.newPlanet = null;
     });
     return this;
   }
@@ -85,10 +108,14 @@ export default class Universe {
     );
     
     for (var i = 0; i < this.planets.length; i++) {
-      this.ctx.beginPath();
-      this.ctx.arc(this.planets[i].position.x,this.planets[i].position.y,this.planets[i].radius,0,Math.PI*2,true);
-      this.ctx.stroke();
+      this.planets[i].render(this.ctx);
     }
+
+    if(this.newPlanet) {
+      this.newPlanet.render(this.ctx);
+    }
+
+    return this;
   }
 
   tick() {

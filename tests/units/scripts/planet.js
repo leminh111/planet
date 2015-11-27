@@ -19,5 +19,10 @@ describe('Planet', () => {
     expect(planet.position).toBeDefined();
     expect(planet.position.x).toBeDefined();
     expect(planet.position.y).toBeDefined();
-  })
+  });
+
+  it('should have render', () => {
+    var planet = new Planet();
+    expect(planet.render).toBeDefined();
+  });
 });

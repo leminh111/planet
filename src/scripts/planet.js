@@ -15,4 +15,11 @@ export default class Planet {
       y: 0
     }
   }
+
+  render(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, true);
+    ctx.stroke();
+    return this;
+  }
 }
