@@ -13,9 +13,11 @@ export default class Universe {
   /**
    * @param {Node} canvas
    */
-  setCanvas(canvas) {
+  setCanvas(canvas, canvas1) {
     this.canvas = canvas;
+    this.canvas1 = canvas1;
     this.ctx = canvas.getContext('2d');
+    this.ctx1 = canvas1.getContext('2d');
     return this;
   }
 
@@ -114,14 +116,36 @@ export default class Universe {
     return this;
   }
 
+  trail() {
+    for (var i = 0; i < this.planets.length; i++) {
+      if (!this.planets[i].trail) {
+        this.planets[i].trail = new Planet();
+        this.planets[i].trail.radius = 0.1;
+      };
+      if (this.planets[i].trail) {
+        this.planets[i].trail.position = this.planets[i].position;
+      }
+    }
+  }
+
   render() {
     this.ctx.clearRect(
       0, 0,
       this.ctx.canvas.width, this.ctx.canvas.height
     );
     
+    this.ctx1.fillStyle = 'rgba(255, 255, 255, .005)';
+    this.ctx1.fillRect(
+      0, 0,
+      this.ctx1.canvas.width, this.ctx1.canvas.height
+    );
+
     for (var i = 0; i < this.planets.length; i++) {
       this.planets[i].render(this.ctx);
+    }
+
+    for (var i = 0; i < this.planets.length; i++) {
+      this.planets[i].trail.render(this.ctx1);
     }
 
     if(this.newPlanet) {
@@ -171,6 +195,7 @@ export default class Universe {
       this.planets[k].position.x += this.planets[k].velocity.x*deltaT;
       this.planets[k].position.y += this.planets[k].velocity.y*deltaT;
     }
+    this.trail();
     return this;
   }
 }

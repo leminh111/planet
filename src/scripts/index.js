@@ -4,6 +4,7 @@ import Universe from './universe';
 
 document.addEventListener('DOMContentLoaded', function() {
   var canvas = document.getElementById('universe');
+  var canvas1 = document.getElementById('universe1');
 
   var universe = new Universe();
 
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
   .addPlanet(planetO)
   .addPlanet(planetA)
   .addPlanet(planetB)
-  .setCanvas(canvas)
+  .setCanvas(canvas, canvas1)
   .createPlanet()
   .setDeltaT(0.02)
   .bigbang();
