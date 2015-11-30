@@ -1,4 +1,5 @@
 import Planet from './planet';
+import Line from './line';
 export default class Universe {
   constructor () {
     this.planets = [];
@@ -58,20 +59,32 @@ export default class Universe {
       self.newPlanet = new Planet();
       self.newPlanet.position.x = self.initX;
       self.newPlanet.position.y = self.initY;
-      self.newPlanet.radius = 10;
+      self.newPlanet.radius = 1;
 
       self.stopInterval = setInterval(function() {
-        ++self.newPlanet.radius;
+        self.newPlanet.radius += 0.3;
       }, 100);
+
+      self.newLine = new Line();
+      self.newLine.init.x = e.clientX - this.getBoundingClientRect().left;
+      self.newLine.init.y = e.clientY - this.getBoundingClientRect().top;
+      self.newLine.last.x = self.newLine.init.x;
+      self.newLine.last.y = self.newLine.init.y;
     });
 
     // When mouse move, if there's a newPlanet,
     //   update its position to mouse pointer
     this.canvas.addEventListener('mousemove', function(e) {
       if(self.newPlanet) {
-        self.newPlanet.position.x = e.clientX;
-        self.newPlanet.position.y = e.clientY;
+        self.newPlanet.position.x = e.clientX - this.getBoundingClientRect().left;
+        self.newPlanet.position.y = e.clientY - this.getBoundingClientRect().top;
       }
+
+      if(self.newLine) {
+        self.newLine.last.x = e.clientX - this.getBoundingClientRect().left;
+        self.newLine.last.y = e.clientY - this.getBoundingClientRect().top;
+      }
+
     });
 
     // When release mouse, calculate the velocity
@@ -82,12 +95,12 @@ export default class Universe {
       self.lastX = e.clientX - this.getBoundingClientRect().left;
       self.lastY = e.clientY - this.getBoundingClientRect().top;
 
-      var velocity = { x: 0, y: 0 };
-
-      self.newPlanet.velocity = velocity;
+      self.newPlanet.velocity.x = self.initX - self.lastX;
+      self.newPlanet.velocity.y = self.initY - self.lastY;
       self.addPlanet(self.newPlanet);
 
       self.newPlanet = null;
+      self.newLine = null;
     });
     return this;
   }
@@ -113,6 +126,10 @@ export default class Universe {
 
     if(this.newPlanet) {
       this.newPlanet.render(this.ctx);
+    }
+
+    if(this.newLine) {
+      this.newLine.render(this.ctx);
     }
 
     return this;

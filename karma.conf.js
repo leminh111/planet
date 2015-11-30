@@ -18,7 +18,7 @@ module.exports = function(karmaConfig) {
     logLevel: karmaConfig.LOG_INFO,
     reporters: ['progress'],
     autoWatch: true,
-    browsers: ['PhantomJS'],
+    browsers: ['Firefox'],
     singleRun: false,
     concurrency: Infinity,
     browserify: {

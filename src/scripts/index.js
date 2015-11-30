@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var universe = new Universe();
 
-  var planetO = new PlanetSquare();
+  var planetO = new Planet();
   var planetA = new Planet();
   var planetB = new Planet();
 
@@ -31,6 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
   .addPlanet(planetB)
   .setCanvas(canvas)
   .createPlanet()
-  .setDeltaT(0.08)
+  .setDeltaT(0.02)
   .bigbang();
 }, false)
