@@ -4,7 +4,7 @@ import Universe from './universe';
 
 document.addEventListener('DOMContentLoaded', function() {
   var canvas = document.getElementById('universe');
-  var canvas1 = document.getElementById('universe1');
+  var underlay = document.getElementById('underlayTrail');
 
   var universe = new Universe();
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
   .addPlanet(planetO)
   .addPlanet(planetA)
   .addPlanet(planetB)
-  .setCanvas(canvas, canvas1)
+  .setCanvas(canvas, underlay)
   .createPlanet()
   .setDeltaT(0.02)
   .bigbang();

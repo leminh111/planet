@@ -13,11 +13,11 @@ export default class Universe {
   /**
    * @param {Node} canvas
    */
-  setCanvas(canvas, canvas1) {
+  setCanvas(canvas, underlay) {
     this.canvas = canvas;
-    this.canvas1 = canvas1;
+    this.underlay = underlay;
     this.ctx = canvas.getContext('2d');
-    this.ctx1 = canvas1.getContext('2d');
+    this.ctxUnderlay = underlay.getContext('2d');
     return this;
   }
 
@@ -133,11 +133,11 @@ export default class Universe {
       0, 0,
       this.ctx.canvas.width, this.ctx.canvas.height
     );
-    
-    this.ctx1.fillStyle = 'rgba(255, 255, 255, .005)';
-    this.ctx1.fillRect(
+
+    this.ctxUnderlay.fillStyle = 'rgba(255, 255, 255, .015)';
+    this.ctxUnderlay.fillRect(
       0, 0,
-      this.ctx1.canvas.width, this.ctx1.canvas.height
+      this.ctxUnderlay.canvas.width, this.ctxUnderlay.canvas.height
     );
 
     for (var i = 0; i < this.planets.length; i++) {
@@ -145,7 +145,7 @@ export default class Universe {
     }
 
     for (var i = 0; i < this.planets.length; i++) {
-      this.planets[i].trail.render(this.ctx1);
+      this.planets[i].trail.render(this.ctxUnderlay);
     }
 
     if(this.newPlanet) {
