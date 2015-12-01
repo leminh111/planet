@@ -17,16 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var planetB = new Planet();
 
   planetO.radius = 15;
-  planetO.mass = 8000;
+  planetO.density = 1;
   planetO.position = {x:500, y:250};
 
   planetA.radius = 10;
-  planetA.mass = 9;
   planetA.position = {x:400, y:200};
   planetA.velocity.y = 20;
 
   planetB.radius = 10;
-  planetB.mass = 10;
   planetB.position = {x:350, y:200};
   planetB.velocity.y = 18;
 

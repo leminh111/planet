@@ -33,10 +33,12 @@ export default class Universe {
         if (i !== j) {
           dist = Math.sqrt(Math.pow(this.planets[j].position.x - this.planets[i].position.x,2) + Math.pow(this.planets[j].position.y - this.planets[i].position.y,2));
           if (dist < this.planets[j].radius + this.planets[i].radius) {
-            if (this.planets[i].mass <= this.planets[j].mass) {
+            if (this.planets[i].getMass() <= this.planets[j].getMass()) {
+              // FIXME update radius
               this.planets[j].mass += this.planets[i].mass;
               this.planets.splice(i, 1);
             } else {
+              // FIXME update radius
               this.planets[i].mass += this.planets[j].mass;
               this.planets.splice(j, 1);
             }
@@ -179,8 +181,8 @@ export default class Universe {
         else {
           subtrX = this.planets[j].position.x - this.planets[i].position.x;
           subtrY = this.planets[j].position.y - this.planets[i].position.y;
-          forceX += gConst*this.planets[i].mass*this.planets[j].mass*subtrX/Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
-          forceY += gConst*this.planets[i].mass*this.planets[j].mass*subtrY/Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
+          forceX += gConst * this.planets[i].getMass() * this.planets[j].getMass() * subtrX / Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
+          forceY += gConst * this.planets[i].getMass() * this.planets[j].getMass() * subtrY / Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
         }
       }
       this.planets[i].gForce.x = forceX;
@@ -190,8 +192,9 @@ export default class Universe {
     }
     
     for (var k = 0; k < this.planets.length; k++) {
-      this.planets[k].velocity.x += this.planets[k].gForce.x*deltaT/this.planets[k].mass;
-      this.planets[k].velocity.y += this.planets[k].gForce.y*deltaT/this.planets[k].mass;
+      this.planets[k].velocity.x += this.planets[k].gForce.x*deltaT / this.planets[k].getMass();
+      this.planets[k].velocity.y += this.planets[k].gForce.y*deltaT / this.planets[k].getMass();
+
       this.planets[k].position.x += this.planets[k].velocity.x*deltaT;
       this.planets[k].position.y += this.planets[k].velocity.y*deltaT;
     }
