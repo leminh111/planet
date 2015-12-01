@@ -18,6 +18,12 @@ gulp.task('dist', function() {
     .pipe(gulp.dest('./www/assets/js/'))
 });
 
-gulp.task('watch', ['dist'], function() {
-  gulp.watch('./src/scripts/**', ['dist'])
+gulp.task('front-controller', function() {
+  return gulp.src('./src/index.html')
+    .pipe(gulp.dest('./www/'));
+});
+
+gulp.task('watch', ['dist', 'front-controller'], function() {
+  gulp.watch('./src/scripts/**', ['dist']);
+  gulp.watch('./src/index.html', ['front-controller']);
 })
