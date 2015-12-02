@@ -19,14 +19,17 @@ document.addEventListener('DOMContentLoaded', function() {
   planetO.radius = 15;
   planetO.density = 1;
   planetO.position = {x:500, y:250};
+  planetO.recalculateMass();
 
   planetA.radius = 10;
   planetA.position = {x:400, y:200};
   planetA.velocity.y = 20;
+  planetA.recalculateMass();
 
   planetB.radius = 10;
   planetB.position = {x:350, y:200};
   planetB.velocity.y = 18;
+  planetB.recalculateMass();
 
   universe
   .addPlanet(planetO)

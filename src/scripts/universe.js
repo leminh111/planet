@@ -6,7 +6,7 @@ export default class Universe {
   }
 
   addPlanet(planet) {
-    this.planets.push(planet)
+    this.planets.push(planet);
     return this;
   }
 
@@ -27,19 +27,31 @@ export default class Universe {
   }
 
   collide() {
-    var dist;
     for (var i = 0; i < this.planets.length; i++) {
       for (var j = 0; j < this.planets.length; j++) {
         if (i !== j) {
-          dist = Math.sqrt(Math.pow(this.planets[j].position.x - this.planets[i].position.x,2) + Math.pow(this.planets[j].position.y - this.planets[i].position.y,2));
+          var dist = Math.sqrt(Math.pow(this.planets[j].position.x - this.planets[i].position.x,2) + Math.pow(this.planets[j].position.y - this.planets[i].position.y,2));
           if (dist < this.planets[j].radius + this.planets[i].radius) {
-            if (this.planets[i].getMass() <= this.planets[j].getMass()) {
-              // FIXME update radius
-              this.planets[j].mass += this.planets[i].mass;
+            var mass = this.planets[j].mass + this.planets[i].mass;
+            var volume = this.planets[j].getVolume() + this.planets[i].getVolume();
+            var radius = Planet.getRadius(volume);
+
+            var velocityX = (this.planets[j].mass * this.planets[j].velocity.x + this.planets[i].mass * this.planets[i].velocity.x) / mass;
+            var velocityY = (this.planets[j].mass * this.planets[j].velocity.y + this.planets[i].mass * this.planets[i].velocity.y) / mass;
+
+            if(this.planets[i].mass < this.planets[j].mass) {
+              this.planets[j].mass = mass;
+              this.planets[j].volume = volume;
+              this.planets[j].radius = radius;
+              this.planets[j].velocity.x = velocityX;
+              this.planets[j].velocity.y = velocityY;
               this.planets.splice(i, 1);
             } else {
-              // FIXME update radius
-              this.planets[i].mass += this.planets[j].mass;
+              this.planets[i].mass = mass;
+              this.planets[i].volume = volume;
+              this.planets[i].radius = radius;
+              this.planets[i].velocity.x = velocityX;
+              this.planets[i].velocity.y = velocityY;
               this.planets.splice(j, 1);
             }
           }
@@ -101,6 +113,7 @@ export default class Universe {
 
       self.newPlanet.velocity.x = self.initX - self.lastX;
       self.newPlanet.velocity.y = self.initY - self.lastY;
+      self.newPlanet.recalculateMass();
       self.addPlanet(self.newPlanet);
 
       self.newPlanet = null;
@@ -181,8 +194,8 @@ export default class Universe {
         else {
           subtrX = this.planets[j].position.x - this.planets[i].position.x;
           subtrY = this.planets[j].position.y - this.planets[i].position.y;
-          forceX += gConst * this.planets[i].getMass() * this.planets[j].getMass() * subtrX / Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
-          forceY += gConst * this.planets[i].getMass() * this.planets[j].getMass() * subtrY / Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
+          forceX += gConst * this.planets[i].mass * this.planets[j].mass * subtrX / Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
+          forceY += gConst * this.planets[i].mass * this.planets[j].mass * subtrY / Math.pow(Math.sqrt(Math.pow(subtrX,2) + Math.pow(subtrY,2)), 3);
         }
       }
       this.planets[i].gForce.x = forceX;
@@ -192,8 +205,8 @@ export default class Universe {
     }
     
     for (var k = 0; k < this.planets.length; k++) {
-      this.planets[k].velocity.x += this.planets[k].gForce.x*deltaT / this.planets[k].getMass();
-      this.planets[k].velocity.y += this.planets[k].gForce.y*deltaT / this.planets[k].getMass();
+      this.planets[k].velocity.x += this.planets[k].gForce.x*deltaT / this.planets[k].mass;
+      this.planets[k].velocity.y += this.planets[k].gForce.y*deltaT / this.planets[k].mass;
 
       this.planets[k].position.x += this.planets[k].velocity.x*deltaT;
       this.planets[k].position.y += this.planets[k].velocity.y*deltaT;

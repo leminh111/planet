@@ -15,6 +15,7 @@ export default class Planet {
       x: 0,
       y: 0
     }
+    this.mass = 1;
   }
 
   render(ctx) {
@@ -24,7 +25,16 @@ export default class Planet {
     return this;
   }
 
-  getMass() {
-    return 0.75 * Math.PI * Math.pow(this.radius, 3) * this.density;
+  recalculateMass() {
+    this.mass = 0.75 * Math.PI * Math.pow(this.radius, 3) * this.density;
+    return this;
+  }
+
+  getVolume() {
+    return 0.75 * Math.PI * Math.pow(this.radius, 3);
+  }
+
+  static getRadius(vol) {
+    return Math.pow(vol / 0.75 / Math.PI, 1 / 3);
   }
 }
